@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Compiled class file
 *.class
 
@@ -21,3 +22,23 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+=======
++*.class
+*.cache
+.classpath
+.project
+.DS_STORE
+target
+download
+gerbil_data
+bin
+.settings
+gerbil_keys.properties
+gerbil_data
+*.log
+google*.html
+export
+datadump.nt
+indexes
+dependency-reduced-pom.xml
+>>>>>>> 1f66997b68600c29f0eff2657fa3eb59df531ca9
