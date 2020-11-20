@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Compiled class file
 *.class
 
@@ -22,7 +21,6 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-=======
 +*.class
 *.cache
 .classpath
@@ -41,4 +39,3 @@ export
 datadump.nt
 indexes
 dependency-reduced-pom.xml
->>>>>>> 1f66997b68600c29f0eff2657fa3eb59df531ca9
