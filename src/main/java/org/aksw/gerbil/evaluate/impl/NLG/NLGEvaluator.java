@@ -13,38 +13,7 @@ import org.aksw.gerbil.evaluate.Evaluator;
 import org.apache.commons.io.IOUtils;
 
 public class NLGEvaluator implements Evaluator<SimpleFileRef> {
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-        ReaderThread reader = new ReaderThread();
-        Thread readerThread = new Thread(reader);
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command(new String[]{"./test.sh"});
-        Process p = processBuilder.start();
-        reader.setInput(p.getInputStream());
-
-
-        reader.setProcess(p);
-        readerThread.start();
-
-        // Wait for the python process to terminate
-        int exitValue = p.waitFor();
-        // stop the reader thread
-        reader.setTerminate(true);
-        // Wait for the reader thread to terminate
-        readerThread.join();
-
-        // The script encountered an issue
-        if (exitValue != 0) {
-            // Try to get the error message of the script
-            IOUtils.copy(p.getErrorStream(), System.err);
-            throw new IllegalStateException("Python script aborted with an error.");
-        }
-
-        String scriptResult = reader.getBuffer().toString();
-        System.out.println("Data:" + scriptResult + "\n");
-
-
-    }
+    
 
     @Override
     public void evaluate(List<List<SimpleFileRef>> annotatorResults, List<List<SimpleFileRef>> goldStandard,
