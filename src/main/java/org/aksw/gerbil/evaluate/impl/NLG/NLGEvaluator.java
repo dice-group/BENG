@@ -3,6 +3,10 @@ package org.aksw.gerbil.evaluate.impl.NLG;
 
 import java.io.*;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -13,7 +17,7 @@ import org.aksw.gerbil.evaluate.Evaluator;
 import org.apache.commons.io.IOUtils;
 
 public class NLGEvaluator implements Evaluator<SimpleFileRef> {
-    
+
 
     @Override
     public void evaluate(List<List<SimpleFileRef>> annotatorResults, List<List<SimpleFileRef>> goldStandard,
@@ -30,8 +34,8 @@ public class NLGEvaluator implements Evaluator<SimpleFileRef> {
         // start python script and gather results
 
             String[] command;
-            ReaderThread reader = new ReaderThread();
-            Thread readerThread = new Thread(reader);
+            //ReaderThread reader = new ReaderThread();
+            //Thread readerThread = new Thread(reader);
             if (language.equals("ru")){
                 command = new String[]{"python3", "src/main/java/org/aksw/gerbil/python/mt/eval.py",
                         "-R", ref.getAbsolutePath(), "-H",hypo.getAbsolutePath(), "-lng", "ru", "-nr", "1",
@@ -44,28 +48,39 @@ public class NLGEvaluator implements Evaluator<SimpleFileRef> {
         System.out.println("command: "+ command);
 
         try {
-
-            ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.command(command);
+            Cron cron = new Cron();
+            ProcessBuilder processBuilder = new ProcessBuilder().redirectErrorStream(true).command(command);
             Process p = processBuilder.start();
-            reader.setInput(p.getInputStream());
-            readerThread.start();
+            //reader.setInput(p.getInputStream());
+            //readerThread.start();
+
+            BufferedReader bufreader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            StringBuilder builder = new StringBuilder();
+            cron.builder=builder;
+            ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+            ScheduledFuture fut =  service.schedule(cron, 2, TimeUnit.HOURS);
+            while ((line = bufreader.readLine()) != null) {
+                builder.append(line).append("\n");
+            }
 
             // Wait for the python process to terminate
             int exitValue = p.waitFor();
+            cron.setTerminate(true);
+            fut.cancel(true);
             // stop the reader thread
-            reader.setTerminate(true);
+            //reader.setTerminate(true);
             // Wait for the reader thread to terminate
-            readerThread.join();
+            //readerThread.join();
 
             // The script encountered an issue
             if (exitValue != 0) {
                 // Try to get the error message of the script
-                IOUtils.copy(p.getErrorStream(), System.err);
+                System.err.println(builder.toString());
                 throw new IllegalStateException("Python script aborted with an error.");
             }
-
-            String scriptResult = reader.getBuffer().toString();
+            String scriptResult = builder.toString();
+            //String scriptResult = reader.getBuffer().toString();
             System.out.println("Data:" + scriptResult + "\n");
 
             double bleu, nltk, meteor, chrF, ter;
@@ -90,6 +105,24 @@ public class NLGEvaluator implements Evaluator<SimpleFileRef> {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static final class Cron implements Runnable {
+
+        private boolean terminate=false;
+
+        private StringBuilder builder;
+
+        public void setTerminate(boolean terminate) {
+            this.terminate = terminate;
+        }
+
+        @Override
+        public void run() {
+            if(!terminate){
+                System.out.println(builder.toString());
+            }
         }
     }
 
