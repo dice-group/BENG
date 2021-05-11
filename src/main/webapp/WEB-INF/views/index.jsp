@@ -22,7 +22,7 @@ div.picture {
 	<%@include file="navbar.jsp"%>
 	<div class="jumbotron">
 		<div class="container">
-			<h1>GERBIL NLG -  General Benchmark for Natural Language Translation and Generation</h1>
+			<h1>BENG -  General Benchmark for Natural Language Translation and Generation</h1>
 			<p>This is GERBIL. All your peanuts belong to me!</p>
 			<p>	We present GERBIL NLG, an extension of the general entity annotation system GERBIL. 
 				It offers an easy-to-use web-based platform for the agile comparison 

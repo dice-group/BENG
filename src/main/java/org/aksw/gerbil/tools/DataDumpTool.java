@@ -37,7 +37,7 @@ public class DataDumpTool implements Closeable {
     private static final String OUTPUT_FILE_NAME = "datadump.nt";
     private static final Lang OUTPUT_LANG = Lang.NT;
 
-    private static final String GERBIL_BASE_URL = "http://gerbil.aksw.org/gerbil/";
+    private static final String GERBIL_BASE_URL = "http://beng.aksw.org/gerbil/";
 
     private static final String EXPERIMENT_IDS_QUERY = "SELECT id, taskId FROM Experiments";
 

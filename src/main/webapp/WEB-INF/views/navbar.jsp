@@ -9,7 +9,8 @@
 			<ul class="nav navbar-nav">
 				<li class="active"><a href="/gerbil/">Home</a></li>
 				<li><a href="/gerbil/webnlg2020">WebNLG 2020</a></li>
-				<li><a href="/gerbil/webnlg2020results">WebNLG Results</a></li>
+				<li><a href="/gerbil/webnlg2020results">WebNLG Results - Automatic Evaluation</a></li>
+				<li><a href="/gerbil/webnlg2020resultshumaneval">WebNLG Results - Human Evaluation</a></li>
 				<li><a href="/gerbil/submission">Submission</a></li>
 				<li><a href="/gerbil/config">Configure Experiment</a></li>
 				<li><a href="/gerbil/overview">Experiment Overview</a></li>

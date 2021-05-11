@@ -167,6 +167,13 @@ public class MainController {
         return model;
     }
 
+   @RequestMapping("/webnlg2020resultshumaneval")
+    public ModelAndView webnlg2020resultshumaneval(){
+        ModelAndView model = new ModelAndView();
+        model.setViewName("webnlg2020resultshumaneval");
+        return model;
+    } 
+
     @RequestMapping("/overview")
     public ModelAndView overview() {
         ModelAndView model = new ModelAndView();
