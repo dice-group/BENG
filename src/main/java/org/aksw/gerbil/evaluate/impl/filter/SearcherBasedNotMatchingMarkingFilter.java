@@ -23,6 +23,7 @@ import org.aksw.gerbil.evaluate.AbstractEvaluatorDecorator;
 import org.aksw.gerbil.evaluate.EvaluationResultContainer;
 import org.aksw.gerbil.evaluate.Evaluator;
 import org.aksw.gerbil.evaluate.EvaluatorDecorator;
+import org.aksw.gerbil.exceptions.GerbilException;
 import org.aksw.gerbil.matching.MatchingsSearcher;
 import org.aksw.gerbil.transfer.nif.Marking;
 
@@ -96,7 +97,7 @@ public class SearcherBasedNotMatchingMarkingFilter<T extends Marking> extends Ab
 
     @Override
     public void evaluate(List<List<T>> annotatorResults, List<List<T>> goldStandard,
-            EvaluationResultContainer results,String language) {
+            EvaluationResultContainer results,String language) throws GerbilException {
         evaluator.evaluate(filterListOfMarkings(annotatorResults, goldStandard), goldStandard, results, language);
     }
 

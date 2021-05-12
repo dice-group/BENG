@@ -75,9 +75,9 @@ public class FileUploadController {
         for (Iterator<String> it = request.getFileNames(); it.hasNext();) {
             mpf = request.getFile(it.next());
             logger.debug("{} uploaded", mpf.getOriginalFilename());
-            String uniquePrefix = UUID.randomUUID().toString();
+            String uniquePrefix = UUID.randomUUID().toString().replace("-","");
             FileMeta fileContainer = new FileMeta();
-            fileContainer.setName(uniquePrefix+"_"+mpf.getOriginalFilename());
+            fileContainer.setName(uniquePrefix+mpf.getOriginalFilename());
             fileContainer.setSize(mpf.getSize() / 1024 + "Kb");
             fileContainer.setFileType(mpf.getContentType());
 
@@ -85,7 +85,7 @@ public class FileUploadController {
                 fileContainer.setBytes(mpf.getBytes());
                 createFolderIfNotExists();
                 FileCopyUtils.copy(mpf.getBytes(),
-                        new BufferedOutputStream(new FileOutputStream(path + uniquePrefix+"_"+mpf.getOriginalFilename())));
+                        new BufferedOutputStream(new FileOutputStream(path + uniquePrefix+mpf.getOriginalFilename())));
                 // the copy method closed the output stream
             } catch (IOException e) {
                 logger.error("Error during file upload", e);

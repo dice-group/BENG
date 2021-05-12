@@ -8,9 +8,11 @@ import java.util.UUID;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.aksw.gerbil.data.SimpleFileRef;
+import org.aksw.gerbil.datatypes.ErrorTypes;
 import org.aksw.gerbil.evaluate.DoubleEvaluationResult;
 import org.aksw.gerbil.evaluate.EvaluationResultContainer;
 import org.aksw.gerbil.evaluate.Evaluator;
+import org.aksw.gerbil.exceptions.GerbilException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -22,7 +24,7 @@ public class NLGEvaluator implements Evaluator<SimpleFileRef> {
 
     @Override
     public void evaluate(List<List<SimpleFileRef>> annotatorResults, List<List<SimpleFileRef>> goldStandard,
-                         EvaluationResultContainer results, String language) {
+                         EvaluationResultContainer results, String language) throws GerbilException {
         // We assume that both lists have only one element!!!
         // We assume that each sub list has exactly one element!!!
 
@@ -46,7 +48,7 @@ public class NLGEvaluator implements Evaluator<SimpleFileRef> {
                         "-R", ref.getAbsolutePath(), "-H",hypo.getAbsolutePath(), "-nr", "1",
                         "-m", "bleu,meteor,chrf++,ter"};
            }
-        System.out.println("command: "+ String.join("", command));
+        System.out.println("command: "+ String.join(" ", command));
 
         try {
 
@@ -73,7 +75,8 @@ public class NLGEvaluator implements Evaluator<SimpleFileRef> {
                 // Try to get the error message of the script
                 LOGGER.error(FileUtils.readFileToString(errorFile));
                 errorFile.delete();
-                throw new IllegalStateException("Python script aborted with an error.");
+
+                throw new GerbilException("Python script aborted with an error.", ErrorTypes.UNEXPECTED_EXCEPTION);
             }
             errorFile.delete();
             String scriptResult = reader.getBuffer().toString();

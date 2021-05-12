@@ -25,6 +25,7 @@ import org.aksw.gerbil.evaluate.EvaluationResult;
 import org.aksw.gerbil.evaluate.EvaluationResultContainer;
 import org.aksw.gerbil.evaluate.Evaluator;
 import org.aksw.gerbil.evaluate.SubTaskEvaluator;
+import org.aksw.gerbil.exceptions.GerbilException;
 import org.aksw.gerbil.transfer.nif.Marking;
 
 import com.carrotsearch.hppc.DoubleArrayList;
@@ -38,7 +39,7 @@ public class SubTaskAverageCalculator<T extends Marking> implements Evaluator<T>
     }
 
     @Override
-    public void evaluate(List<List<T>> annotatorResults, List<List<T>> goldStandard, EvaluationResultContainer results,String language) {
+    public void evaluate(List<List<T>> annotatorResults, List<List<T>> goldStandard, EvaluationResultContainer results,String language) throws GerbilException {
         EvaluationResultContainer subTaskResults = new EvaluationResultContainer();
         for (SubTaskEvaluator<T> evaluator : evaluators) {
             evaluator.evaluate(annotatorResults, goldStandard, subTaskResults, language);

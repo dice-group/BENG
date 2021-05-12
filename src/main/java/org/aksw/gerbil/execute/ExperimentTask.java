@@ -319,7 +319,7 @@ public class ExperimentTask implements Task {
 
 	@SuppressWarnings("unchecked")
 	protected <T extends Marking> EvaluationResult evaluate(List<Evaluator<? extends Marking>> evaluators,
-			List<List<T>> annotatorResults, List<List<T>> goldStandard, String language) {
+			List<List<T>> annotatorResults, List<List<T>> goldStandard, String language) throws GerbilException {
 		EvaluationResultContainer evalResults = new EvaluationResultContainer();
 		for (Evaluator<? extends Marking> e : evaluators) {
 			((Evaluator<T>) e).evaluate(annotatorResults, goldStandard, evalResults,language);

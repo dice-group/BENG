@@ -24,6 +24,7 @@ import org.aksw.gerbil.evaluate.AbstractEvaluatorDecorator;
 import org.aksw.gerbil.evaluate.EvaluationResultContainer;
 import org.aksw.gerbil.evaluate.Evaluator;
 import org.aksw.gerbil.evaluate.EvaluatorDecorator;
+import org.aksw.gerbil.exceptions.GerbilException;
 import org.aksw.gerbil.matching.MatchingsSearcher;
 
 import com.carrotsearch.hppc.BitSet;
@@ -50,7 +51,7 @@ public class GSInKBClassifyingEvaluatorDecorator<T extends ClassifiedSpanMeaning
 
     @Override
     public void evaluate(List<List<T>> annotatorResults, List<List<T>> goldStandard,
-            EvaluationResultContainer results, String language) {
+            EvaluationResultContainer results, String language) throws GerbilException {
         classify(annotatorResults, goldStandard);
         evaluator.evaluate(annotatorResults, goldStandard, results, language);
     }
