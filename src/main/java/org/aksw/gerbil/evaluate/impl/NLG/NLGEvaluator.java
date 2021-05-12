@@ -3,6 +3,7 @@ package org.aksw.gerbil.evaluate.impl.NLG;
 
 import java.io.*;
 import java.util.List;
+import java.util.UUID;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -10,10 +11,14 @@ import org.aksw.gerbil.data.SimpleFileRef;
 import org.aksw.gerbil.evaluate.DoubleEvaluationResult;
 import org.aksw.gerbil.evaluate.EvaluationResultContainer;
 import org.aksw.gerbil.evaluate.Evaluator;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NLGEvaluator implements Evaluator<SimpleFileRef> {
-    
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NLGEvaluator.class.getName());
 
     @Override
     public void evaluate(List<List<SimpleFileRef>> annotatorResults, List<List<SimpleFileRef>> goldStandard,
@@ -41,12 +46,17 @@ public class NLGEvaluator implements Evaluator<SimpleFileRef> {
                         "-R", ref.getAbsolutePath(), "-H",hypo.getAbsolutePath(), "-nr", "1",
                         "-m", "bleu,meteor,chrf++,ter"};
            }
-        System.out.println("command: "+ command);
+        System.out.println("command: "+ String.join("", command));
 
         try {
 
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.command(command);
+            //redirect error to file so it won't block
+            String errorFileName = UUID.randomUUID().toString();
+            File errorFile = new File(errorFileName);
+            errorFile.createNewFile();
+            processBuilder.redirectError(ProcessBuilder.Redirect.to(errorFile));
             Process p = processBuilder.start();
             reader.setInput(p.getInputStream());
             readerThread.start();
@@ -61,10 +71,11 @@ public class NLGEvaluator implements Evaluator<SimpleFileRef> {
             // The script encountered an issue
             if (exitValue != 0) {
                 // Try to get the error message of the script
-                IOUtils.copy(p.getErrorStream(), System.err);
+                LOGGER.error(FileUtils.readFileToString(errorFile));
+                errorFile.delete();
                 throw new IllegalStateException("Python script aborted with an error.");
             }
-
+            errorFile.delete();
             String scriptResult = reader.getBuffer().toString();
             System.out.println("Data:" + scriptResult + "\n");
 
@@ -97,7 +108,6 @@ public class NLGEvaluator implements Evaluator<SimpleFileRef> {
 
         private StringBuilder buffer = new StringBuilder();
         private Reader input;
-        private Process process;
         private boolean terminate = false;
 
         @Override
@@ -105,28 +115,19 @@ public class NLGEvaluator implements Evaluator<SimpleFileRef> {
             try {
                 char cBuffer[] = new char[256];
                 int length;
-                while(process.isAlive()) {
-                    while ((length = input.read(cBuffer)) != -1) {
+                while (!terminate) {
+                    while ((input != null) && (input.ready())) {
+                        length = input.read(cBuffer);
                         buffer.append(cBuffer, 0, length);
                     }
                     // sleep for a short moment before checking the stream again
                     Thread.sleep(50);
-                }
-                Thread.sleep(50);
-                //process is not alive, but terminate should not be set to true, if not then p.waitFor hangs for some reason.
-                //This is just a fallback
-                if(!terminate){
-                    process.destroyForcibly();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-
-        public void setProcess(Process p){
-            this.process = p;
         }
 
         public void setInput(InputStream input) {
