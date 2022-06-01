@@ -25,6 +25,7 @@ import java.util.List;
 import org.aksw.gerbil.evaluate.AbstractEvaluatorDecorator;
 import org.aksw.gerbil.evaluate.EvaluationResultContainer;
 import org.aksw.gerbil.evaluate.Evaluator;
+import org.aksw.gerbil.exceptions.GerbilException;
 import org.aksw.gerbil.transfer.nif.Meaning;
 import org.aksw.gerbil.transfer.nif.MeaningSpan;
 import org.aksw.gerbil.transfer.nif.Span;
@@ -52,7 +53,7 @@ public class SpanMergingEvaluatorDecorator<T extends Span> extends AbstractEvalu
     }
 
     @Override
-    public void evaluate(List<List<T>> annotatorResults, List<List<T>> goldStandard, EvaluationResultContainer results,String language) {
+    public void evaluate(List<List<T>> annotatorResults, List<List<T>> goldStandard, EvaluationResultContainer results,String language) throws GerbilException {
         evaluator.evaluate(mergeListOfLists(annotatorResults), mergeListOfLists(goldStandard), results, language);
     }
 

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.aksw.gerbil.datatypes.ExperimentTaskConfiguration;
+import org.aksw.gerbil.exceptions.GerbilException;
 import org.aksw.gerbil.transfer.nif.Marking;
 
 public class SubTaskEvaluator<T extends Marking> implements Evaluator<T> {
@@ -40,7 +41,7 @@ public class SubTaskEvaluator<T extends Marking> implements Evaluator<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void evaluate(List<List<T>> annotatorResults, List<List<T>> goldStandard, EvaluationResultContainer results,String language) {
+    public void evaluate(List<List<T>> annotatorResults, List<List<T>> goldStandard, EvaluationResultContainer results,String language) throws GerbilException {
         SubTaskResult subTaskResults = new SubTaskResult(configuration);
         for (Evaluator<? extends Marking> e : evaluators) {
             ((Evaluator<T>) e).evaluate(annotatorResults, goldStandard, subTaskResults, language);

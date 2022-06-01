@@ -27,6 +27,7 @@ import org.aksw.gerbil.evaluate.DoubleEvaluationResult;
 import org.aksw.gerbil.evaluate.EvaluationResult;
 import org.aksw.gerbil.evaluate.EvaluationResultContainer;
 import org.aksw.gerbil.evaluate.Evaluator;
+import org.aksw.gerbil.exceptions.GerbilException;
 import org.aksw.gerbil.transfer.nif.Marking;
 import org.aksw.gerbil.transfer.nif.ScoredMarking;
 import org.aksw.gerbil.utils.filter.ConfidenceScoreBasedMarkingFilter;
@@ -51,7 +52,7 @@ public class ConfidenceScoreEvaluatorDecorator<T extends Marking> extends Abstra
 
     @Override
     public void evaluate(List<List<T>> annotatorResults, List<List<T>> goldStandard,
-            EvaluationResultContainer results,String language) {
+            EvaluationResultContainer results,String language) throws GerbilException {
         // create a list of confidence scores
         double scores[] = getConfidenceScores(annotatorResults);
         Arrays.sort(scores);
@@ -117,7 +118,7 @@ public class ConfidenceScoreEvaluatorDecorator<T extends Marking> extends Abstra
     }
 
     protected EvaluationResultContainer evaluate(List<List<T>> annotatorResults, List<List<T>> goldStandard,
-            EvaluationResultContainer results, double threshold,String language){
+            EvaluationResultContainer results, double threshold,String language) throws GerbilException {
         EvaluationResultContainer currentResults = new EvaluationResultContainer(results);
         MarkingFilter<T> filter = new ConfidenceScoreBasedMarkingFilter<T>(threshold);
         this.evaluator.evaluate(filter.filterListOfLists(annotatorResults), goldStandard, currentResults,language);

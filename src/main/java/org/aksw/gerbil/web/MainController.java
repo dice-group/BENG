@@ -141,13 +141,14 @@ public class MainController {
     public ModelAndView config() {
         ModelAndView model = new ModelAndView();
         model.setViewName("config");
-        model.addObject("challengeStart", challenge.getStartDate().toString());
-        model.addObject("challengeName", challenge.getName());
-        model.addObject("challengeEnd", challenge.getEndDate().toString());
-        //DateFormat df = new SimpleDateFormat(ExperimentOverviewController.DATE_FORMAT_STRING);
-        model.addObject("challengeTooLate", challenge.getEndDate().before(Calendar.getInstance().getTime()));
-        model.addObject("challengeTooEarly", challenge.getStartDate().after(Calendar.getInstance().getTime()));
-
+        if(challenge!=null) {
+            model.addObject("challengeStart", challenge.getStartDate().toString());
+            model.addObject("challengeName", challenge.getName());
+            model.addObject("challengeEnd", challenge.getEndDate().toString());
+            //DateFormat df = new SimpleDateFormat(ExperimentOverviewController.DATE_FORMAT_STRING);
+            model.addObject("challengeTooLate", challenge.getEndDate().before(Calendar.getInstance().getTime()));
+            model.addObject("challengeTooEarly", challenge.getStartDate().after(Calendar.getInstance().getTime()));
+        }
         return model;
     }
 
@@ -166,6 +167,13 @@ public class MainController {
         model.setViewName("webnlg2020results");
         return model;
     }
+
+   @RequestMapping("/webnlg2020resultshumaneval")
+    public ModelAndView webnlg2020resultshumaneval(){
+        ModelAndView model = new ModelAndView();
+        model.setViewName("webnlg2020resultshumaneval");
+        return model;
+    } 
 
     @RequestMapping("/overview")
     public ModelAndView overview() {

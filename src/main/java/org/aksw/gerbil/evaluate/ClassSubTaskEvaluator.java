@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.aksw.gerbil.datatypes.ExperimentTaskConfiguration;
+import org.aksw.gerbil.exceptions.GerbilException;
 import org.aksw.gerbil.transfer.nif.Marking;
 
 public class ClassSubTaskEvaluator<T extends Marking> extends SubTaskEvaluator<T> {
@@ -37,7 +38,7 @@ public class ClassSubTaskEvaluator<T extends Marking> extends SubTaskEvaluator<T
     }
 
     @Override
-    public void evaluate(List<List<T>> annotatorResults, List<List<T>> goldStandard, EvaluationResultContainer results, String language) {
+    public void evaluate(List<List<T>> annotatorResults, List<List<T>> goldStandard, EvaluationResultContainer results, String language) throws GerbilException {
         super.evaluate(cleanList(annotatorResults), cleanList(goldStandard), results, language);
     }
     
