@@ -109,7 +109,7 @@ public class WikipediaApiBasedSingleUriSameAsRetriever extends AbstractHttpReque
         try {
             response = sendRequest(request);
             entity = response.getEntity();
-            return parser.extractRedirect(IOUtils.toString(entity.getContent(), charset));
+            return parser.extractRedirect(IOUtils.toString(entity.getContent(), String.valueOf(charset)));
         } catch (Exception e) {
             LOGGER.error("Got an exception while querying the wiki api of \"" + domain + "\". Returning null.", e);
             return null;
