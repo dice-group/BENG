@@ -46,6 +46,7 @@ import logging
 import nltk
 import subprocess
 import re
+import tempfile
 
 from metrics.chrF import computeChrF
 from nltk.translate.bleu_score import corpus_bleu, SmoothingFunction
@@ -128,7 +129,8 @@ def bleu_nltk(references, hypothesis):
 
 def meteor_score(references, hypothesis, num_refs, lng='en'):
     logging.info('STARTING TO COMPUTE METEOR...')
-    hyps_tmp, refs_tmp = 'hypothesis_meteor', 'reference_meteor'
+    _, hyps_tmp = tempfile.mkstemp('hypothesis_meteor')
+    _, refs_tmp = tempfile.mkstemp('reference_meteor')
 
     with codecs.open(hyps_tmp, 'w', 'utf-8') as f:
         f.write('\n'.join(hypothesis))
@@ -161,7 +163,8 @@ def meteor_score(references, hypothesis, num_refs, lng='en'):
 
 def chrF_score(references, hypothesis, num_refs, nworder, ncorder, beta):
     logging.info('STARTING TO COMPUTE CHRF++...')
-    hyps_tmp, refs_tmp = 'hypothesis_chrF', 'reference_chrF'
+    _, hyps_tmp = tempfile.mkstemp('hypothesis_chrF')
+    _, refs_tmp = tempfile.mkstemp('reference_chrF')
 
     # check for empty lists
     references_, hypothesis_ = [], []
