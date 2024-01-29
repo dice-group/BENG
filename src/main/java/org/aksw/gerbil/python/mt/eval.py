@@ -76,7 +76,7 @@ def parse(refs_path, hyps_path, num_refs, lng='en'):
         if lng == 'ru':
             references_tok[i] = [' '.join([_.text for _ in tokenize(ref)]) for ref in refs]
         else:
-            references_tok[i] = [' '.join(nltk.word_tokenize(ref)) for ref in refs]
+            references_tok[i] = [' '.join(nltk.word_tokenize(ref, preserve_line=True)) for ref in refs]
 
     # hypothesis
     with codecs.open(hyps_path, 'r', 'utf-8') as f:
@@ -87,7 +87,7 @@ def parse(refs_path, hyps_path, num_refs, lng='en'):
     if lng == 'ru':
         hypothesis_tok = [' '.join([_.text for _ in tokenize(hyp)]) for hyp in hypothesis_tok]
     else:
-        hypothesis_tok = [' '.join(nltk.word_tokenize(hyp)) for hyp in hypothesis_tok]
+        hypothesis_tok = [' '.join(nltk.word_tokenize(hyp, preserve_line=True)) for hyp in hypothesis_tok]
 
 
     logging.info('FINISHING TO PARSE INPUTS...')
