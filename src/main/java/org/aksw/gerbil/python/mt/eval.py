@@ -46,6 +46,7 @@ import logging
 import nltk
 import subprocess
 import re
+import random
 
 from metrics.chrF import computeChrF
 from nltk.translate.bleu_score import corpus_bleu, SmoothingFunction
@@ -54,6 +55,28 @@ from tabulate import tabulate
 
 BLEU_PATH = 'src/main/java/org/aksw/gerbil/python/mt/metrics/multi-bleu-detok.perl'
 METEOR_PATH = 'src/main/java/org/aksw/gerbil/python/mt/metrics/meteor-1.5/meteor-1.5.jar'
+
+def generate_unique_number(file_path='unique_numbers.txt'):
+    # Check if the file exists. If not, create it and initialize with empty set
+    if not os.path.exists(file_path):
+        with open(file_path, 'w') as file:
+            file.write('')
+
+    # Read existing numbers from the file
+    with open(file_path, 'r') as file:
+        existing_numbers = set(int(line.strip()) for line in file if line.strip())
+
+    # Generate a new unique number
+    while True:
+        new_number = random.randint(1, 100000000000)  # You can adjust the range as needed
+        if new_number not in existing_numbers:
+            break
+
+    # Add the new number to the set and write it back to the file
+    with open(file_path, 'a') as file:
+        file.write(f"{new_number}\n")
+
+    return new_number
 
 
 def parse(refs_path, hyps_path, num_refs, lng='en'):
@@ -128,7 +151,8 @@ def bleu_nltk(references, hypothesis):
 
 def meteor_score(references, hypothesis, num_refs, lng='en'):
     logging.info('STARTING TO COMPUTE METEOR...')
-    hyps_tmp, refs_tmp = 'hypothesis_meteor', 'reference_meteor'
+    unique_postfix = generate_unique_number()
+    hyps_tmp, refs_tmp = 'hypothesis_meteor_'+ str(unique_postfix), 'reference_meteor_'+ str(unique_postfix)
 
     with codecs.open(hyps_tmp, 'w', 'utf-8') as f:
         f.write('\n'.join(hypothesis))
@@ -159,9 +183,14 @@ def meteor_score(references, hypothesis, num_refs, lng='en'):
     return float(meteor)
 
 
+
+
+
 def chrF_score(references, hypothesis, num_refs, nworder, ncorder, beta):
     logging.info('STARTING TO COMPUTE CHRF++...')
-    hyps_tmp, refs_tmp = 'hypothesis_chrF', 'reference_chrF'
+
+    unique_postfix = generate_unique_number()
+    hyps_tmp, refs_tmp = 'hypothesis_chrF_'+ str(unique_postfix), 'reference_chrF_' + str(unique_postfix)
 
     # check for empty lists
     references_, hypothesis_ = [], []
