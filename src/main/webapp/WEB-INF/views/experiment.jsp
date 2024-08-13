@@ -176,7 +176,7 @@
 									+ experimentId + "</a>";
 							// If this is the AKSW instance of GERBIL
 							if (origin == "https://beng.dice-research.org") {
-								content += " and <a href=\"http://w3id.org/gerbil/nlg/experiment"
+								content += " and <a href=\"http://w3id.org/gerbil/beng/experiment"
 					+ experimentId
 					+ "\">http://w3id.org/gerbil/experiment"
 										+ experimentId + "</a>";
