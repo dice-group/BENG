@@ -24,6 +24,7 @@ WantedBy=default.target
 To setup the service:
 ```bash
 sudo systemctl daemon-reload
+sudo systemctl enable bengserver
 sudo systemctl start bengserver
 sudo systemctl status bengserver
 ```
