@@ -39,3 +39,8 @@ export
 datadump.nt
 indexes
 dependency-reduced-pom.xml
+archive/
+conda-venv-beng/
+BENG/
+WebNLG Text2RDF/
+sample-data/
